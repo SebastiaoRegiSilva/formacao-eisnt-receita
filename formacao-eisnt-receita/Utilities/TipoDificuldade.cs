@@ -1,18 +1,21 @@
-﻿namespace formacao_eisnt_receita.Utilities
+﻿using System.ComponentModel;
+
+namespace formacao_eisnt_receita.Utilities
 {
 	/// <summary>
 	/// Dificuldade de preparo da receita.
 	/// </summary>
 	public enum TipoDificuldade
 	{
-		Superfacil = 1,
-		
+		[Description("Super Fácil")]
+		SuperFacil = 1,
+		[Description("Fácil")]
 		Facil = 2,
-		
-		Media = 3,
-
+		[Description("Médio")]
+		Medio = 3,
+		[Description("Difícil")]
 		Dificil = 4,
-		
-		MuitoDificil = 5,
+		[Description("Super Difícil")]
+		SuperDificil = 5,
 	}
 }

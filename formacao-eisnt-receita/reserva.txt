@@ -1,0 +1,93 @@
+﻿using formacao_eisnt_receita.Helpers;
+using formacao_eisnt_receita.Model;
+using formacao_eisnt_receita.Repository;
+using formacao_eisnt_receita.Utilities;
+using System;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+
+namespace formacao_eisnt_receita
+{
+	public partial class Form2 : Form
+	{
+		/// <summary>
+		/// Construtor do formulário.
+		/// </summary>
+		public Form2()
+		{
+			InitializeComponent();
+
+			// Preencher o ComboBox com os valores do descrição do enum TipoDificuldade.
+			ComboDifPrep.DataSource = Enum.GetValues(typeof(TipoDificuldade))
+													.Cast<TipoDificuldade>()
+													.Select(e => new
+													{
+														Value = e,
+														Display = EnumHelper.GetEnumDescription(e)
+													}
+													).ToList();
+
+			ComboDifPrep.DisplayMember = "Display";
+			ComboDifPrep.ValueMember = "Value";
+
+		}
+
+		private void ButtonAdcIngredientes_Click(object sender, EventArgs e)
+		{
+			Label labelInformacaoDataGrid = new Label()
+			{
+				Location = new System.Drawing.Point(792, 7),
+				Text = "Adição de Ingredientes",
+				Font = new System.Drawing.Font("Arial", 12)
+			};
+			// Adicionando o Label ao Form
+			this.Controls.Add(labelInformacaoDataGrid);
+
+			// Criar o DataGridView.
+			DataGridView dataGridViewIngredientes = new()
+			{
+				Location = new System.Drawing.Point(690, 31), //Posição do DataGrid.
+				Size = new System.Drawing.Size(347, 449),
+				AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+				BackgroundColor = System.Drawing.Color.White,
+				AllowUserToAddRows = false // Permitir adicionar linhas.
+			};
+
+			// Adicionar colunas ao DataGridView.
+			dataGridViewIngredientes.Columns.Add("Nome", "Nome"); // Coluna de texto para Nome.
+
+			DataGridViewTextBoxColumn quantidadeColumn = new()
+			{
+				Name = "Quantidade",
+				HeaderText = "Quantidade",
+				ValueType = typeof(int) // Tipo numérico.
+			};
+			dataGridViewIngredientes.Columns.Add(quantidadeColumn);
+
+			// Coluna com valores do Enum UnidadeDeMedida (ComboBox)
+			DataGridViewComboBoxColumn unidadeColumn = new()
+			{
+				Name = "Unidade",
+				HeaderText = "Unidade de Medida",
+				DataSource = Enum.GetValues(typeof(UnidadeDeMedida)), // Vincular enum como fonte
+				ValueType = typeof(UnidadeDeMedida)
+			};
+			dataGridViewIngredientes.Columns.Add(unidadeColumn);
+
+			// Adicionar o DataGridView ao formulário
+			this.Controls.Add(dataGridViewIngredientes);
+		}
+
+		private void ComboDifPrep_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			// Obter o valor selecionado no ComboBox como tipo enum
+			if (ComboDifPrep.SelectedItem != null)
+			{
+				TipoDificuldade dificuldadeSelecionada = (TipoDificuldade)((dynamic)ComboDifPrep.SelectedItem).Value;
+				MessageBox.Show($"Dificuldade selecionada: {dificuldadeSelecionada}");
+			}
+		}
+	}
+}
